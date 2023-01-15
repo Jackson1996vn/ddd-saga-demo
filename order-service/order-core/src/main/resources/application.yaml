@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring.cloud.stream:
+  function:
+    definition: supplier;consumer
+  bindings:
+    supplier-out-0:
+      destination: order-created
+    consumer-in-0:
+      destination: order-updated
+
+spring:
+  r2dbc:
+    url: r2dbc:pool:mysql://test.c7ly5jwum2dv.ap-southeast-1.rds.amazonaws.com:3306/orderDB?zeroDateTimeBehavior=convertToNull&useSSL=false&useServerPrepareStatement=true
+    username: admin
+    password: admin123
+    driver-class-name: com.mysql.cj.jdbc.Driver
