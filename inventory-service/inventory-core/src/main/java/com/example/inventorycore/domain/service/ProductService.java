@@ -7,6 +7,8 @@ import com.example.inventorycore.domain.model.request.DeductProductRequest;
 import com.example.inventorycore.domain.model.response.ProductResponse;
 import com.example.inventorycore.domain.port.imcoming.ProductIncoming;
 import com.example.inventorycore.infrastructure.adapter.ProductRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,10 @@ import java.util.stream.Collectors;
 public class ProductService implements ProductIncoming {
 
     private final ProductRepository repository;
+
+    private final KafkaService kafkaService;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public List<ProductResponse> findAll() {
@@ -33,9 +39,10 @@ public class ProductService implements ProductIncoming {
     }
 
     @Override
-    public ProductResponse addInventory(CreateProductRequest request) {
-        Product product = repository.createProduct(mappingToProduct(request));
-        return mappingToResponse(product);
+    public String addInventory(CreateProductRequest request) throws JsonProcessingException {
+        Product product = this.mappingToProduct(request);
+        kafkaService.send(objectMapper.writeValueAsString(product));
+        return "Success";
     }
 
     private ProductResponse mappingToResponse(Product product) {

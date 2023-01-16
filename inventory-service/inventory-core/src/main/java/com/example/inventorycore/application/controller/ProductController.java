@@ -4,6 +4,7 @@ import com.example.inventorycore.domain.model.request.CreateProductRequest;
 import com.example.inventorycore.domain.model.request.DeductProductRequest;
 import com.example.inventorycore.domain.model.response.ProductResponse;
 import com.example.inventorycore.domain.service.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ProductResponse> add(@RequestBody final CreateProductRequest requestDTO){
+    public ResponseEntity<String> add(@RequestBody final CreateProductRequest requestDTO) throws JsonProcessingException {
         return ResponseEntity.ok(productService.addInventory(requestDTO));
     }
 
